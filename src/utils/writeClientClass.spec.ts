@@ -1,6 +1,7 @@
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
+import { RequestHeaders } from '../RequestHeaders';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientClass } from './writeClientClass';
@@ -33,6 +34,10 @@ describe('writeClientClass', () => {
                 request: () => 'request',
                 baseHttpRequest: () => 'baseHttpRequest',
                 httpRequest: () => 'httpRequest',
+                accept: {
+                    [RequestHeaders.HAL]: () => 'jsonHal',
+                    [RequestHeaders.LD]: () => 'jsonLd',
+                },
             },
         };
 

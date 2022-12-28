@@ -3,6 +3,7 @@ import { EOL } from 'os';
 import type { Client } from '../client/interfaces/Client';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
+import { RequestHeaders } from '../RequestHeaders';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientCore } from './writeClientCore';
@@ -35,10 +36,14 @@ describe('writeClientCore', () => {
                 request: () => 'request',
                 baseHttpRequest: () => 'baseHttpRequest',
                 httpRequest: () => 'httpRequest',
+                accept: {
+                    [RequestHeaders.HAL]: () => 'jsonHal',
+                    [RequestHeaders.LD]: () => 'jsonLd',
+                },
             },
         };
 
-        await writeClientCore(client, templates, '/', HttpClient.FETCH, Indent.SPACE_4);
+        await writeClientCore(client, templates, '/', HttpClient.FETCH, Indent.SPACE_4, RequestHeaders.JSON);
 
         expect(writeFile).toBeCalledWith('/OpenAPI.ts', `settings${EOL}`);
         expect(writeFile).toBeCalledWith('/ApiError.ts', `apiError${EOL}`);

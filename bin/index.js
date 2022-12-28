@@ -13,6 +13,11 @@ const params = program
     .requiredOption('-i, --input <value>', 'OpenAPI specification, can be a path, url or string content (required)')
     .requiredOption('-o, --output <value>', 'Output directory (required)')
     .option('-c, --client <value>', 'HTTP client to generate [fetch, xhr, node, axios, angular]', 'fetch')
+    .option(
+        '-a, --accept <value>',
+        'Accept header of the request [application/json, application/ld+json, application/hal+json]',
+        'application/json'
+    )
     .option('--name <value>', 'Custom client class name')
     .option('--useOptions', 'Use options instead of arguments')
     .option('--useUnionTypes', 'Use union types instead of enums')
@@ -35,6 +40,7 @@ if (OpenAPI) {
         input: params.input,
         output: params.output,
         httpClient: params.client,
+        accept: params.accept,
         clientName: params.name,
         useOptions: params.useOptions,
         useUnionTypes: params.useUnionTypes,

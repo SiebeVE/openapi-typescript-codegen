@@ -3,7 +3,9 @@ import { resolve } from 'path';
 import type { Client } from '../client/interfaces/Client';
 import type { HttpClient } from '../HttpClient';
 import type { Indent } from '../Indent';
-import { copyFile, exists, writeFile } from './fileSystem';
+import { RequestHeaders, ResponseTypeFileName } from '../RequestHeaders';
+import { copyFile, exists, mkdir, rmdir, writeFile } from './fileSystem';
+import { formatCode as f } from './formatCode';
 import { formatIndentation as i } from './formatIndentation';
 import { getHttpRequestName } from './getHttpRequestName';
 import { isDefined } from './isDefined';
@@ -25,6 +27,7 @@ export const writeClientCore = async (
     outputPath: string,
     httpClient: HttpClient,
     indent: Indent,
+    accept: RequestHeaders,
     clientName?: string,
     request?: string
 ): Promise<void> => {
@@ -56,5 +59,16 @@ export const writeClientCore = async (
             throw new Error(`Custom request file "${requestFile}" does not exists`);
         }
         await copyFile(requestFile, resolve(outputPath, 'request.ts'));
+    }
+
+    if (accept !== RequestHeaders.JSON) {
+        const responsePath = `${outputPath}/response`;
+        await rmdir(responsePath);
+        await mkdir(responsePath);
+
+        await writeFile(
+            resolve(responsePath, `${ResponseTypeFileName[accept]}.ts`),
+            i(f(templates.core.accept[accept](context)), indent)
+        );
     }
 };

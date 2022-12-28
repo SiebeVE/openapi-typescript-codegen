@@ -1,4 +1,5 @@
 import type { Client } from '../client/interfaces/Client';
+import { RequestHeaders } from '../RequestHeaders';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientIndex } from './writeClientIndex';
@@ -31,6 +32,10 @@ describe('writeClientIndex', () => {
                 request: () => 'request',
                 baseHttpRequest: () => 'baseHttpRequest',
                 httpRequest: () => 'httpRequest',
+                accept: {
+                    [RequestHeaders.HAL]: () => 'jsonHal',
+                    [RequestHeaders.LD]: () => 'jsonLd',
+                },
             },
         };
 

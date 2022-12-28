@@ -1,0 +1,14 @@
+export type JsonLd<Member> = Member extends Array<infer MemberArray> ? LdResponse<MemberArray> : Member;
+
+interface LdResponse<Member> {
+	'hydra:member': Member[];
+	'hydra:totalItems': number;
+	'hydra:view': {
+		'@id': string;
+		type: string;
+		'hydra:first': string;
+		'hydra:last': string;
+		'hydra:previous': string;
+		'hydra:next': string;
+	};
+}

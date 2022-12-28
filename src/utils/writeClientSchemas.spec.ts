@@ -3,6 +3,7 @@ import { EOL } from 'os';
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
+import { RequestHeaders } from '../RequestHeaders';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientSchemas } from './writeClientSchemas';
@@ -48,6 +49,10 @@ describe('writeClientSchemas', () => {
                 request: () => 'request',
                 baseHttpRequest: () => 'baseHttpRequest',
                 httpRequest: () => 'httpRequest',
+                accept: {
+                    [RequestHeaders.HAL]: () => 'jsonHal',
+                    [RequestHeaders.LD]: () => 'jsonLd',
+                },
             },
         };
 

@@ -1,0 +1,28 @@
+export type JsonHal<Member> = Member extends Array<infer MemberArray> ? HalResponse<MemberArray> : Member;
+
+interface HalResponse<Member> {
+	_links: {
+		self: {
+			href: string;
+		};
+		first: {
+			href: string;
+		};
+		prev: {
+			href: string;
+		};
+		next: {
+			href: string;
+		};
+		last: {
+			href: string;
+		};
+	};
+	_embedded: Member[];
+	page: {
+		size: number;
+		totalElements: number;
+		totalPages: number;
+		number: number;
+	};
+}

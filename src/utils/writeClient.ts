@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import type { Client } from '../client/interfaces/Client';
 import type { HttpClient } from '../HttpClient';
 import type { Indent } from '../Indent';
+import { RequestHeaders } from '../RequestHeaders';
 import { mkdir, rmdir } from './fileSystem';
 import { isDefined } from './isDefined';
 import { isSubDirectory } from './isSubdirectory';
@@ -38,6 +39,7 @@ export const writeClient = async (
     templates: Templates,
     output: string,
     httpClient: HttpClient,
+    accept: RequestHeaders,
     useOptions: boolean,
     useUnionTypes: boolean,
     exportCore: boolean,
@@ -63,7 +65,7 @@ export const writeClient = async (
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient, indent, clientName, request);
+        await writeClientCore(client, templates, outputPathCore, httpClient, indent, accept, clientName, request);
     }
 
     if (exportServices) {
@@ -74,6 +76,7 @@ export const writeClient = async (
             templates,
             outputPathServices,
             httpClient,
+            accept,
             useUnionTypes,
             useOptions,
             indent,
@@ -114,5 +117,9 @@ export const writeClient = async (
             postfixModels,
             clientName
         );
+    }
+
+    if (accept === RequestHeaders.HAL) {
+    } else if (accept === RequestHeaders.LD) {
     }
 };

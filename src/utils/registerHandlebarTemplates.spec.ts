@@ -1,4 +1,5 @@
 import { HttpClient } from '../HttpClient';
+import { RequestHeaders } from '../RequestHeaders';
 import { registerHandlebarTemplates } from './registerHandlebarTemplates';
 
 describe('registerHandlebarTemplates', () => {
@@ -7,6 +8,7 @@ describe('registerHandlebarTemplates', () => {
             httpClient: HttpClient.FETCH,
             useOptions: false,
             useUnionTypes: false,
+            accept: RequestHeaders.JSON,
         });
         expect(templates.index).toBeDefined();
         expect(templates.exports.model).toBeDefined();

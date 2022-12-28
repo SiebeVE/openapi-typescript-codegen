@@ -2,6 +2,7 @@ import { HttpClient } from './HttpClient';
 import { Indent } from './Indent';
 import { parse as parseV2 } from './openApi/v2';
 import { parse as parseV3 } from './openApi/v3';
+import { RequestHeaders } from './RequestHeaders';
 import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { getOpenApiVersion, OpenApiVersion } from './utils/getOpenApiVersion';
 import { isString } from './utils/isString';
@@ -16,6 +17,7 @@ export type Options = {
     input: string | Record<string, any>;
     output: string;
     httpClient?: HttpClient;
+    accept?: RequestHeaders;
     clientName?: string;
     useOptions?: boolean;
     useUnionTypes?: boolean;
@@ -37,6 +39,7 @@ export type Options = {
  * @param input The relative location of the OpenAPI spec
  * @param output The relative location of the output directory
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
+ * @param accept The selected accept (json, hal, ld)
  * @param clientName Custom client class name
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
@@ -54,6 +57,7 @@ export const generate = async ({
     input,
     output,
     httpClient = HttpClient.FETCH,
+    accept = RequestHeaders.JSON,
     clientName,
     useOptions = false,
     useUnionTypes = false,
@@ -70,6 +74,7 @@ export const generate = async ({
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
     const openApiVersion = getOpenApiVersion(openApi);
     const templates = registerHandlebarTemplates({
+        accept,
         httpClient,
         useUnionTypes,
         useOptions,
@@ -78,13 +83,14 @@ export const generate = async ({
     switch (openApiVersion) {
         case OpenApiVersion.V2: {
             const client = parseV2(openApi);
-            const clientFinal = postProcessClient(client);
+            const clientFinal = postProcessClient(client, accept);
             if (!write) break;
             await writeClient(
                 clientFinal,
                 templates,
                 output,
                 httpClient,
+                accept,
                 useOptions,
                 useUnionTypes,
                 exportCore,
@@ -102,13 +108,14 @@ export const generate = async ({
 
         case OpenApiVersion.V3: {
             const client = parseV3(openApi);
-            const clientFinal = postProcessClient(client);
+            const clientFinal = postProcessClient(client, accept);
             if (!write) break;
             await writeClient(
                 clientFinal,
                 templates,
                 output,
                 httpClient,
+                accept,
                 useOptions,
                 useUnionTypes,
                 exportCore,

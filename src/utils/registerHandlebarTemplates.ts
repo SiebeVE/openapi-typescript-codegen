@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars/runtime';
 
 import { HttpClient } from '../HttpClient';
+import { RequestHeaders } from '../RequestHeaders';
 import templateClient from '../templates/client.hbs';
 import angularGetHeaders from '../templates/core/angular/getHeaders.hbs';
 import angularGetRequestBody from '../templates/core/angular/getRequestBody.hbs';
@@ -46,6 +47,8 @@ import nodeRequest from '../templates/core/node/request.hbs';
 import nodeSendRequest from '../templates/core/node/sendRequest.hbs';
 import templateCoreSettings from '../templates/core/OpenAPI.hbs';
 import templateCoreRequest from '../templates/core/request.hbs';
+import responseJsonHal from '../templates/core/response/JsonHal.hbs';
+import responseJsonLd from '../templates/core/response/JsonLd.hbs';
 import xhrGetHeaders from '../templates/core/xhr/getHeaders.hbs';
 import xhrGetRequestBody from '../templates/core/xhr/getRequestBody.hbs';
 import xhrGetResponseBody from '../templates/core/xhr/getResponseBody.hbs';
@@ -102,6 +105,10 @@ export interface Templates {
         request: Handlebars.TemplateDelegate;
         baseHttpRequest: Handlebars.TemplateDelegate;
         httpRequest: Handlebars.TemplateDelegate;
+        accept: {
+            [RequestHeaders.HAL]: Handlebars.TemplateDelegate;
+            [RequestHeaders.LD]: Handlebars.TemplateDelegate;
+        };
     };
 }
 
@@ -110,6 +117,7 @@ export interface Templates {
  * so we can easily access the templates in out generator / write functions.
  */
 export const registerHandlebarTemplates = (root: {
+    accept: RequestHeaders;
     httpClient: HttpClient;
     useOptions: boolean;
     useUnionTypes: boolean;
@@ -134,6 +142,10 @@ export const registerHandlebarTemplates = (root: {
             request: Handlebars.template(templateCoreRequest),
             baseHttpRequest: Handlebars.template(templateCoreBaseHttpRequest),
             httpRequest: Handlebars.template(templateCoreHttpRequest),
+            accept: {
+                [RequestHeaders.HAL]: Handlebars.template(responseJsonHal),
+                [RequestHeaders.LD]: Handlebars.template(responseJsonLd),
+            },
         },
     };
 

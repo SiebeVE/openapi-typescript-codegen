@@ -3,6 +3,7 @@ import { EOL } from 'os';
 import type { Service } from '../client/interfaces/Service';
 import { HttpClient } from '../HttpClient';
 import { Indent } from '../Indent';
+import { RequestHeaders } from '../RequestHeaders';
 import { writeFile } from './fileSystem';
 import type { Templates } from './registerHandlebarTemplates';
 import { writeClientServices } from './writeClientServices';
@@ -36,10 +37,24 @@ describe('writeClientServices', () => {
                 request: () => 'request',
                 baseHttpRequest: () => 'baseHttpRequest',
                 httpRequest: () => 'httpRequest',
+                accept: {
+                    [RequestHeaders.HAL]: () => 'jsonHal',
+                    [RequestHeaders.LD]: () => 'jsonLd',
+                },
             },
         };
 
-        await writeClientServices(services, templates, '/', HttpClient.FETCH, false, false, Indent.SPACE_4, 'Service');
+        await writeClientServices(
+            services,
+            templates,
+            '/',
+            HttpClient.FETCH,
+            RequestHeaders.JSON,
+            false,
+            false,
+            Indent.SPACE_4,
+            'Service'
+        );
 
         expect(writeFile).toBeCalledWith('/UserService.ts', `service${EOL}`);
     });

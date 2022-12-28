@@ -5,13 +5,21 @@ import { EOL } from 'os';
 import type { Enum } from '../client/interfaces/Enum';
 import type { Model } from '../client/interfaces/Model';
 import type { HttpClient } from '../HttpClient';
+import { RequestHeaders } from '../RequestHeaders';
 import { unique } from './unique';
 
 export const registerHandlebarHelpers = (root: {
     httpClient: HttpClient;
+    accept: RequestHeaders;
     useOptions: boolean;
     useUnionTypes: boolean;
 }): void => {
+    Handlebars.registerHelper('typeWrapper', function (this: any, ...args): string {
+        const options = args.pop();
+
+        return options.fn(this);
+    });
+
     Handlebars.registerHelper('ifdef', function (this: any, ...args): string {
         const options = args.pop();
         if (!args.every(value => !value)) {

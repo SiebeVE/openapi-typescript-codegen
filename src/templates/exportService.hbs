@@ -30,6 +30,11 @@ import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 {{/if}}
+{{#equals @root.accept 'application/ld+json'}}
+import type { JsonLd } from '../core/response/JsonLd';
+{{else equals @root.accept 'application/hal+json'}}
+import type { JsonHal } from '../core/response/JsonHal';
+{{/equals}}
 
 {{#equals @root.httpClient 'angular'}}
 @Injectable({

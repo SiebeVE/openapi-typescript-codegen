@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars/runtime';
 
 import { HttpClient } from '../HttpClient';
+import { RequestHeaders } from '../RequestHeaders';
 import { registerHandlebarHelpers } from './registerHandlebarHelpers';
 
 describe('registerHandlebarHelpers', () => {
@@ -9,6 +10,7 @@ describe('registerHandlebarHelpers', () => {
             httpClient: HttpClient.FETCH,
             useOptions: false,
             useUnionTypes: false,
+            accept: RequestHeaders.JSON,
         });
         const helpers = Object.keys(Handlebars.helpers);
         expect(helpers).toContain('ifdef');
